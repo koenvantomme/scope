@@ -127,10 +127,27 @@ class Terminal extends React.Component {
     socket.onmessage = (event) => {
       log('pipe data', event.data.size);
       const input = ab2str(event.data);
+      const scrolledToBottom = term.ydisp === term.ybase;
+      const savedScrollPosition = term.ydisp;
       term.write(input);
+      if (!scrolledToBottom) {
+        this.scrollTo(savedScrollPosition);
+      }
     };
 
     this.socket = socket;
+  }
+
+  scrollToBottom() {
+    this.scrollTo(this.term.ybase);
+  }
+
+  scrollTo(y) {
+    if (!this.term) {
+      return;
+    }
+    this.term.ydisp = y;
+    this.term.refresh(0, this.term.rows - 1);
   }
 
   componentDidMount() {
@@ -145,6 +162,7 @@ class Terminal extends React.Component {
     const innerNode = ReactDOM.findDOMNode(component.inner);
     this.term.open(innerNode);
     this.term.on('data', (data) => {
+      this.scrollToBottom();
       if (this.socket) {
         this.socket.send(data);
       }
