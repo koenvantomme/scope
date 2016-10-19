@@ -156,7 +156,8 @@ class Terminal extends React.Component {
     this.term = new Term({
       cols: this.state.cols,
       rows: this.state.rows,
-      convertEol: !this.props.raw
+      convertEol: !this.props.raw,
+      scrollback: 10000,
     });
 
     const innerNode = ReactDOM.findDOMNode(component.inner);
