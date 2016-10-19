@@ -1285,9 +1285,9 @@ Terminal.prototype.refresh = function(start, end) {
   width = this.cols;
   y = start;
 
-  if (end >= this.lines.length) {
+  if (end + this.ydisp >= this.lines.length) {
     this.log('`end` is too large. Most likely a bad CSR.');
-    end = this.lines.length - 1;
+    end = this.lines.length - 1 - this.ydisp;
   }
 
   for (; y <= end; y++) {
